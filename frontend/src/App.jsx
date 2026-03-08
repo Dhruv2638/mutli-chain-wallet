@@ -4,6 +4,7 @@ import UnlockScreen from "./components/UnlockScreen";
 import Dashboard from "./components/Dashboard";
 
 export default function App() {
+  console.log("are we coming here");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [mnemonic, setMnemonic] = useState(null);
 

@@ -1,9 +1,6 @@
 import * as bip39 from "bip39";
-import dotenv from "dotenv";
 
-// Load environment variables
-dotenv.config();
-
+// No dotenv needed in browser!
 export function generateSeedPhrase() {
   return bip39.generateMnemonic();
 }
@@ -15,6 +12,6 @@ export async function getSeedFromPhrase(mnemonic) {
   return await bip39.mnemonicToSeed(mnemonic);
 }
 
-// Export RPC URLs for other files to use
-export const ETH_RPC_URL = `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
-export const SOL_RPC_URL = process.env.SOLANA_RPC_URL;
+// Hardcode RPC URLs for browser (no process.env)
+export const ETH_RPC_URL = `https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}`;
+export const SOL_RPC_URL = "https://api.devnet.solana.com";

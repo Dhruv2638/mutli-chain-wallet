@@ -1,18 +1,17 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default defineConfig({
-  plugins: [react()],
-  define: {
-    "process.env": {},
-    global: "globalThis",
-  },
-  resolve: {
-    alias: {
-      buffer: "buffer",
-    },
-  },
-  optimizeDeps: {
-    include: ["buffer"],
-  },
+  plugins: [
+    react(),
+    nodePolyfills({
+      include: ["buffer", "stream", "crypto", "process"],
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+    }),
+  ],
 });

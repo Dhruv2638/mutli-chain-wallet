@@ -1,120 +1,175 @@
-@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #050a0e;
-  --bg-secondary: #0a1628;
-  --bg-card: #0d1f35;
-  --accent-cyan: #00d4ff;
-  --accent-green: #00ff88;
-  --accent-purple: #7c3aed;
-  --accent-orange: #ff6b35;
-  --text-primary: #e2e8f0;
-  --text-secondary: #64748b;
-  --border: #1e3a5f;
-  --danger: #ff4444;
+  --amber: #ffb000;
+  --amber-dim: #c87800;
+  --amber-glow: #ff9500;
+  --amber-faint: #3d2800;
+  --amber-bg: #1a0f00;
+  --green: #00ff41;
+  --green-dim: #00b32d;
+  --red: #ff3131;
+  --bg: #0d0700;
+  --bg2: #150c00;
+  --grid: #2a1800;
+  --text: #ffb000;
+  --text-dim: #7a5500;
+  --text-faint: #3d2c00;
+  --scanline-opacity: 0.03;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: "Rajdhani", sans-serif;
+html, body {
+  background: var(--bg);
+  color: var(--amber);
+  font-family: 'IBM Plex Mono', monospace;
   min-height: 100vh;
   overflow-x: hidden;
+  cursor: crosshair;
 }
 
+/* CRT Screen Effect */
 body::before {
-  content: "";
+  content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(
-      ellipse at 20% 50%,
-      rgba(0, 212, 255, 0.03) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse at 80% 20%,
-      rgba(124, 58, 237, 0.05) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse at 50% 80%,
-      rgba(0, 255, 136, 0.02) 0%,
-      transparent 50%
-    );
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,var(--scanline-opacity)) 2px,
+    rgba(0,0,0,var(--scanline-opacity)) 4px
+  );
   pointer-events: none;
-  z-index: 0;
+  z-index: 9999;
 }
 
-.mono {
-  font-family: "Share Tech Mono", monospace;
+/* CRT Vignette */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 9998;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 2px;
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--grid); }
+::-webkit-scrollbar-thumb { background: var(--amber-dim); }
+
+/* Typography */
+.vt { font-family: 'VT323', monospace; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+
+/* Grid lines everywhere */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Glow effects */
+.glow {
+  text-shadow:
+    0 0 5px var(--amber),
+    0 0 10px var(--amber-dim),
+    0 0 20px var(--amber-faint);
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.glow-green {
+  text-shadow:
+    0 0 5px var(--green),
+    0 0 10px var(--green-dim);
 }
 
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
+.glow-red {
+  text-shadow: 0 0 5px var(--red);
 }
 
-@keyframes glow {
-  0%,
-  100% {
-    box-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
-  }
+/* Box glow */
+.box-glow {
+  box-shadow:
+    0 0 0 1px var(--amber-dim),
+    0 0 10px rgba(255, 176, 0, 0.1),
+    inset 0 0 20px rgba(255, 176, 0, 0.02);
 }
 
-.animate-fade {
-  animation: fadeIn 0.5s ease forwards;
+/* Blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
-.animate-glow {
-  animation: glow 2s ease infinite;
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+@keyframes scanDown {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typeIn {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 0 1px var(--amber-dim), 0 0 10px rgba(255,176,0,0.1); }
+  50% { box-shadow: 0 0 0 1px var(--amber), 0 0 20px rgba(255,176,0,0.2); }
+}
+
+.blink { animation: blink 1s step-end infinite; }
+.flicker { animation: flicker 8s infinite; }
+.fade-up { animation: fadeInUp 0.3s ease forwards; }
+
+/* Input styles */
+input {
+  background: var(--bg2) !important;
+  border: 1px solid var(--amber-dim) !important;
+  color: var(--amber) !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  outline: none !important;
+  caret-color: var(--amber);
+}
+
+input::placeholder { color: var(--text-dim) !important; }
+input:focus { border-color: var(--amber) !important; box-shadow: 0 0 8px rgba(255,176,0,0.2) !important; }
+
+/* Button base */
+button {
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: crosshair;
+  transition: all 0.1s;
+}
+
+/* Horizontal rule */
+.hr {
+  border: none;
+  border-top: 1px solid var(--grid);
+  margin: 0;
+}
+
+/* Status dot */
+.dot-live {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: blink 2s ease-in-out infinite;
+  display: inline-block;
 }
