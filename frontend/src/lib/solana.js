@@ -1,4 +1,4 @@
-import { derivePath } from "ed25519-hd-key";
+import { HDKey } from "@scure/bip32";
 import {
   Keypair,
   Connection,
@@ -9,18 +9,22 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import bs58 from "bs58";
-import { SOL_RPC_URL } from "./wallet.js";
+
+const SOL_RPC_URL = "https://api.devnet.solana.com";
 
 export function getSolanaWallet(seed, index = 0) {
   const path = `m/44'/501'/${index}'/0'`;
-  const { key } = derivePath(path, seed.toString("hex"));
-  const keypair = Keypair.fromSeed(key);
+
+  // Use @scure/bip32 instead of ed25519-hd-key — fully browser compatible
+  const hdKey = HDKey.fromMasterSeed(seed);
+  const derived = hdKey.derive(path);
+  const keypair = Keypair.fromSeed(derived.privateKey);
 
   return {
     index,
     address: keypair.publicKey.toBase58(),
     privateKey: bs58.encode(keypair.secretKey),
-    keypair, // ← we need this for signing transactions
+    keypair,
   };
 }
 
@@ -34,32 +38,23 @@ export function getMultipleSolanaWallets(seed, count = 3) {
 
 export async function getSolanaBalance(address) {
   const connection = new Connection(SOL_RPC_URL, "confirmed");
-  const balanceLamports = await connection.getBalance(new PublicKey(address));
-  return balanceLamports / LAMPORTS_PER_SOL;
+  const balance = await connection.getBalance(new PublicKey(address));
+  return balance / LAMPORTS_PER_SOL;
 }
 
-// ✅ New — Send SOL to another address
 export async function sendSol(fromKeypair, toAddress, amount) {
   const connection = new Connection(SOL_RPC_URL, "confirmed");
 
-  // Convert SOL to Lamports
-  const lamports = amount * LAMPORTS_PER_SOL;
-
-  // Create transaction
   const transaction = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: fromKeypair.publicKey,
       toPubkey: new PublicKey(toAddress),
-      lamports,
+      lamports: amount * LAMPORTS_PER_SOL,
     }),
   );
 
-  // Sign and send transaction
-  const signature = await sendAndConfirmTransaction(
-    connection,
-    transaction,
-    [fromKeypair], // signers array
-  );
-
+  const signature = await sendAndConfirmTransaction(connection, transaction, [
+    fromKeypair,
+  ]);
   return signature;
 }

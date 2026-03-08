@@ -330,7 +330,6 @@ export default function UnlockScreen({ onUnlock }) {
                         padding: "10px 14px",
                         border: "1px solid var(--red)",
                         marginBottom: "16px",
-                        fontSize: "12px",
                         color: "var(--red)",
                         letterSpacing: "1px",
                         fontFamily: "VT323, monospace",
@@ -378,7 +377,6 @@ export default function UnlockScreen({ onUnlock }) {
                   >
                     <div
                       style={{
-                        fontSize: "11px",
                         color: "var(--red)",
                         letterSpacing: "3px",
                         marginBottom: "12px",
