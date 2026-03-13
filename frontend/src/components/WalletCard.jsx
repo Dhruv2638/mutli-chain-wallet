@@ -1,5 +1,5 @@
 import { useState } from "react";
-import RevealKeyModal from "./RevealKeyModal";
+import RevealKeyModal from "./RevealModel";
 
 export default function WalletCard({ wallet, chain, index, onSend }) {
   const [copied, setCopied] = useState(false);
